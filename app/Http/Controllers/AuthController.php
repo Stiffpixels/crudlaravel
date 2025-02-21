@@ -18,23 +18,10 @@ class AuthController extends Controller
 {
 
     /**
-     * Display the registration view.
-     */
-    public function create(): View
-    {
-        return view('auth.register');
-    }
-
-    public function createLogin(): View
-    {
-        return view('auth.login');
-    }
-
-    /**
      * Get a JWT via given credentials.
      *
      */
-    public function storeLogin(Request $request): RedirectResponse
+    public function login(Request $request): RedirectResponse
     {
         $credentials = request(['email', 'password']);
         $token = auth()->attempt($credentials);
@@ -49,7 +36,7 @@ class AuthController extends Controller
     /**
      * Register a user
      */
-    public function store(Request $request): RedirectResponse
+    public function register(Request $request): RedirectResponse
     {
         $request->validate([
             'username' => ['required', 'string', 'max:255'],
@@ -74,7 +61,6 @@ class AuthController extends Controller
     /**
      * Get the authenticated User.
      *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function me()
     {
@@ -84,38 +70,11 @@ class AuthController extends Controller
     /**
      * Log the user out (Invalidate the token).
      *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function logout(): RedirectResponse
     {
         auth()->logout();
 
         return redirect(route('login'));
-    }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
     }
 }

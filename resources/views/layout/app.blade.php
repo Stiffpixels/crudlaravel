@@ -11,8 +11,8 @@
 
   <title>{{ config('app.name', 'Laravel') }}</title>
 
-  <link rel="dns-prefetch" href="//fonts.bunny.net">
-  <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 
   <!--add this to have this styles on all pages-->
   @yield('css')
@@ -29,33 +29,37 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
            <span class="navbar-toggler-icon"></span>
        </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="{{route('dashboard')}}">Dashboard <span class="sr-only">(current)</span></a>
-        </ul>
+      <div class="" id="navbarNav">
 
         <ul class="navbar-nav">
 
           @guest
           <li class="nav-item">
-            <a class="nav-link" href="route('login')"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a class="nav-link" href="{{route('login')}}"><i class="fas fa-sign-in-alt"></i> Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="route('register')"><i class="fas fa-user-plus"></i> Signup</a>
+            <a class="nav-link" href="{{route('register')}}"><i class="fas fa-user-plus"></i> Register</a>
           </li>
 
           @endguest @auth
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i>
-              {{Auth::user()->username}}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{url('dashboard')}}"><i class="far fa-id-badge"></i></i> Profile</a>
-              <a class="dropdown-item" href="{{url('contactm')}}"><i class="fas fa-envelope-open-text"></i> Messages</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{url('logout')}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
+
+            @if(Auth::user()->role=="admin")
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{{route('users')}}">Users</a>
+              </li>
+            @endif
+
+            <li class="nav-item">
+              <a class="text-white" href="{{route('categories')}}">Categories </a>
+              <a class="text-white" href="{{route('products')}}">Products </a>
+            </li>
+            <li class="nav-item dropdown text-white">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{Auth::user()->username}}
+              </button>
+              <ul class="dropdown-menu">
+                <a class="dropdown-item" href="{{url('logout')}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+              </ul>
           </li>
           @endauth
         </ul>
@@ -67,6 +71,6 @@
 
   @yield('content')
 
-  @stack('scripts')
+  @yield('scripts')
 </body>
 </html>

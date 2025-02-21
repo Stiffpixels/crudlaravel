@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
 
-class JwtExists
+class OnlyAdmin
 {
     /**
      * Handle an incoming request.
@@ -19,10 +19,9 @@ class JwtExists
     {
         $user = auth()->user();
 
-        if($user!=null){
-            return redirect('/dashboard');
+        if($user->role != 'admin'){
+            return redirect(route('dashboard'));
         }
-
         return $next($request);
     }
 }
