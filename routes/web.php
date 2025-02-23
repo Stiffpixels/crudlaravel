@@ -8,8 +8,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Middleware\JwtMiddleware;
 use App\Http\Middleware\OnlyAdmin;
 use App\Http\Middleware\JwtExists;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,7 +42,13 @@ Route::middleware([JwtMiddleware::class])->group(function(){
 
         //products crud
         Route::post('/products/add', [ProductController::class, 'addProduct'])->name("products.add");
-        Route::get('/products', [ProductController::class, 'getAllProducts'])->name("products");
+
+        //product datatable view
+        Route::get('/products', [ProductController::class, 'displayDataTable'])->name("products");
+
+        //product datatable json data for ajax
+        Route::get('/products/datatable', [ProductController::class, 'getDataTable'])->name("products.datatable");
+
         Route::post('/products/update/{id}', [ProductController::class, 'updateProduct']);
         Route::get('/products/delete/{id}', [ProductController::class, 'deleteProduct']);
     });

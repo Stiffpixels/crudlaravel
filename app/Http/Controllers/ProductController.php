@@ -2,23 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
+use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
 {
-    public function getAllProducts(Request $request){
-        $q = $request->query('q');
-        $eloQ = Product::query();
+    /*public function getAllProducts(Request $request){*/
+    /*    $q = $request->query('q');*/
+    /*    $eloQ = Product::query();*/
+    /**/
+    /*    if($q!=null){*/
+    /*        $eloQ->orWhere('name', 'like', '%'.$q.'%');*/
+    /*    }*/
+    /**/
+    /*    return view('admin.products', ['categories'=>Category::all(), 'products'=>$eloQ->Paginate(10)]);*/
+    /*}*/
 
-        if($q!=null){
-            $eloQ->orWhere('name', 'like', '%'.$q.'%');
-        }
+    public function getDataTable(){
+        $categories = Product::query();
+        return DataTables::of($categories)->make(true);
+    }
 
-        return view('admin.products', ['categories'=>Category::all(), 'products'=>$eloQ->Paginate(10)]);
+    public function displayDataTable():View{
+
+        return view('admin.products', ['categories'=>Category::all()]);
     }
 
     public function addProduct(Request $request): RedirectResponse
@@ -37,7 +48,7 @@ class ProductController extends Controller
         $product->cover_img = "";
         $product->save();
 
-        return redirect(route('products'));
+        return redirect(route('products'))->with('success', "Product added successfully!");
     }
 
     public function updateProduct(Request $request, string $id)
